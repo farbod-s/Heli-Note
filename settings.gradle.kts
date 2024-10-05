@@ -21,4 +21,3 @@ dependencyResolutionManagement {
 
 rootProject.name = "Heli Note"
 include(":app")
- 

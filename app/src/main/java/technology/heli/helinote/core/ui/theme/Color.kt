@@ -1,4 +1,4 @@
-package technology.heli.helinote.ui.theme
+package technology.heli.helinote.core.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
