@@ -2,6 +2,8 @@ package technology.heli.helinote.app
 
 import android.app.Application
 import android.content.Context
+import androidx.hilt.work.HiltWorkerFactory
+import androidx.work.Configuration
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequest
 import androidx.work.PeriodicWorkRequestBuilder
@@ -9,9 +11,18 @@ import androidx.work.WorkManager
 import dagger.hilt.android.HiltAndroidApp
 import technology.heli.helinote.feature.notification.worker.RemovePastRemindersWorker
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 @HiltAndroidApp
-class HeliNoteApplication : Application() {
+class HeliNoteApplication : Application(), Configuration.Provider {
+
+    @Inject
+    lateinit var workerFactory: HiltWorkerFactory
+
+    override val workManagerConfiguration: Configuration
+        get() = Configuration.Builder()
+            .setWorkerFactory(workerFactory)
+            .build()
 
     override fun onCreate() {
         super.onCreate()
@@ -25,7 +36,7 @@ class HeliNoteApplication : Application() {
                 .build()
 
         WorkManager.getInstance(context).enqueueUniquePeriodicWork(
-            "MyPeriodicWork",
+            "RemovePastRemindersWorker",
             ExistingPeriodicWorkPolicy.KEEP,
             workRequest
         )

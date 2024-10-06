@@ -67,8 +67,6 @@ dependencies {
     // Navigation for Jetpack Compose
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.navigation.runtime.ktx)
-    implementation(libs.androidx.hilt.navigation.compose)
-    implementation(libs.androidx.hilt.common)
 
     // ViewModel integration with Jetpack Compose
     implementation(libs.androidx.lifecycle.viewmodel.compose)
@@ -77,6 +75,10 @@ dependencies {
     implementation(libs.androidx.work.runtime)
 
     // Dependency Injection - Hilt
+    implementation(libs.androidx.hilt.common)
+    implementation(libs.androidx.hilt.navigation.compose)
+    implementation(libs.androidx.hilt.worker)
+    kapt(libs.androidx.hilt.compiler)
     implementation(libs.google.dagger.hilt)
     kapt(libs.google.dagger.hilt.compiler)
 

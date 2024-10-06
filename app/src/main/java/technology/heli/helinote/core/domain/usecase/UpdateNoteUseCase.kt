@@ -29,7 +29,12 @@ class UpdateNoteUseCase @Inject constructor(
         var noteId: Long? = null
         try {
             isNewNote = noteRepository.isNoteExists(note.id).not()
-            noteId = noteRepository.insertNote(note)
+            if (isNewNote) {
+                noteId = noteRepository.insertNote(note)
+            } else {
+                noteRepository.updateNote(note)
+                noteId = note.id
+            }
             addReminderUseCase(note = note.copy(id = noteId), remindersToAdd = remindersToAdd)
             removeReminderUseCase(remindersToRemove = remindersToRemove)
         } catch (exception: Exception) {

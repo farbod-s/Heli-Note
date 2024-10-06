@@ -27,6 +27,9 @@ class DefaultNoteRepository @Inject constructor(
     override suspend fun insertNote(note: Note) =
         noteDao.insertNote(noteMapper.mapFrom(note))
 
+    override suspend fun updateNote(note: Note) =
+        noteDao.updateNote(noteMapper.mapFrom(note))
+
     override suspend fun deleteNoteById(id: Long) =
         noteDao.deleteNoteById(id)
 }
