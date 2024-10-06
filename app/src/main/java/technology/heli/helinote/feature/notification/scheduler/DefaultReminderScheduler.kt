@@ -1,23 +1,22 @@
 package technology.heli.helinote.feature.notification.scheduler
 
-import android.Manifest
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Build
-import androidx.core.content.ContextCompat
 import dagger.hilt.android.qualifiers.ApplicationContext
 import technology.heli.helinote.core.domain.model.Reminder
 import technology.heli.helinote.core.domain.model.RepeatType
 import technology.heli.helinote.core.domain.model.exception.ExactAlarmPermissionRequiredException
 import technology.heli.helinote.core.domain.model.exception.PostNotificationPermissionNotGrantedException
+import technology.heli.helinote.feature.notification.NotificationHelper
 import technology.heli.helinote.feature.notification.receiver.ReminderBroadcastReceiver
 import javax.inject.Inject
 
 class DefaultReminderScheduler @Inject constructor(
-    @ApplicationContext private val context: Context
+    @ApplicationContext private val context: Context,
+    private val notificationHelper: NotificationHelper,
 ) : ReminderScheduler {
     companion object {
         const val EXTRA_REMINDER_ID = "EXTRA_REMINDER_ID"
@@ -26,12 +25,10 @@ class DefaultReminderScheduler @Inject constructor(
     }
 
     override fun schedule(reminder: Reminder, reminderTitle: String, reminderMessage: String) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS)
-                != PackageManager.PERMISSION_GRANTED
-            ) {
-                throw PostNotificationPermissionNotGrantedException("Notification permission is not granted.")
-            }
+        if (notificationHelper.areNotificationsEnabled().not()
+            || notificationHelper.isPostNotificationPermissionGranted().not()
+        ) {
+            throw PostNotificationPermissionNotGrantedException("Notification permission is not granted.")
         }
 
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager

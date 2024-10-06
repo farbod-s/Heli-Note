@@ -8,4 +8,5 @@ sealed class AddEditNoteAction {
 
     data class OnReminderRemoved(val reminderId: Long) : AddEditNoteAction()
     data object OnSaveClicked : AddEditNoteAction()
+    data object OnNotificationPermissionRejected : AddEditNoteAction()
 }

@@ -7,6 +7,7 @@ sealed class AddEditNoteUiEvent {
 }
 
 sealed class UiEventAction(val label: String) {
-    data object OpenExactAlarmPermission : UiEventAction("Open Setting")
+    data object OpenExactAlarmSettings : UiEventAction("Open Setting")
     data object ShowPostNotificationPermission : UiEventAction("Grant Permission")
+    data object OpenNotificationSettings : UiEventAction("Open Setting")
 }

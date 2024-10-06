@@ -1,5 +1,7 @@
 package technology.heli.helinote.feature.addedit
 
+import android.Manifest
+import android.os.Build
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,6 +13,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.launch
+import technology.heli.helinote.core.database.store.PreferencesDataStore
 import technology.heli.helinote.core.domain.model.Note
 import technology.heli.helinote.core.domain.model.Reminder
 import technology.heli.helinote.core.domain.model.RepeatType
@@ -27,6 +30,7 @@ class AddEditNoteViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val getNoteUseCase: GetNoteUseCase,
     private val updateNoteUseCase: UpdateNoteUseCase,
+    private val preferences: PreferencesDataStore,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(AddEditNoteState())
@@ -63,6 +67,7 @@ class AddEditNoteViewModel @Inject constructor(
             )
 
             is AddEditNoteAction.OnReminderRemoved -> removeReminder(action.reminderId)
+            AddEditNoteAction.OnNotificationPermissionRejected -> notificationPermissionRejected()
         }
     }
 
@@ -104,14 +109,26 @@ class AddEditNoteViewModel @Inject constructor(
                 _uiEvent.emit(
                     AddEditNoteUiEvent.Error(
                         message = exception.message ?: "Exact alarm permission required.",
-                        action = UiEventAction.OpenExactAlarmPermission
+                        action = UiEventAction.OpenExactAlarmSettings
                     )
                 )
             } catch (exception: PostNotificationPermissionNotGrantedException) {
+                val permissionAskedBefore =
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        preferences.isPermissionAskedBefore(Manifest.permission.POST_NOTIFICATIONS)
+                    } else {
+                        false
+                    }
+                val action =
+                    if (permissionAskedBefore) {
+                        UiEventAction.OpenNotificationSettings
+                    } else {
+                        UiEventAction.ShowPostNotificationPermission
+                    }
                 _uiEvent.emit(
                     AddEditNoteUiEvent.Error(
                         message = exception.message ?: "Notification permission is not granted.",
-                        action = UiEventAction.ShowPostNotificationPermission
+                        action = action
                     )
                 )
             }
@@ -174,5 +191,16 @@ class AddEditNoteViewModel @Inject constructor(
         dateCalendar.set(Calendar.MILLISECOND, 0)
 
         return dateCalendar.timeInMillis
+    }
+
+    private fun notificationPermissionRejected() {
+        viewModelScope.launch {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                preferences.setPermissionAskedBefore(
+                    permission = Manifest.permission.POST_NOTIFICATIONS,
+                    value = true
+                )
+            }
+        }
     }
 }

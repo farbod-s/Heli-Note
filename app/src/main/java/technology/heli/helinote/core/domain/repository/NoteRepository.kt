@@ -8,6 +8,8 @@ interface NoteRepository {
 
     fun getNoteById(id: Long): Flow<Note?>
 
+    suspend fun isNoteExists(id: Long): Boolean
+
     suspend fun insertNote(note: Note): Long
 
     suspend fun deleteNoteById(id: Long)

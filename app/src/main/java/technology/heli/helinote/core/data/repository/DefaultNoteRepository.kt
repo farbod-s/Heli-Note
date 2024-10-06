@@ -1,6 +1,7 @@
 package technology.heli.helinote.core.data.repository
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import technology.heli.helinote.core.database.dao.NoteDao
 import technology.heli.helinote.core.database.entity.NoteEntity
@@ -19,6 +20,9 @@ class DefaultNoteRepository @Inject constructor(
 
     override fun getNoteById(id: Long): Flow<Note?> =
         noteDao.getNoteById(id).map { note -> note?.let { noteMapper.mapTo(it) } }
+
+    override suspend fun isNoteExists(id: Long): Boolean =
+        noteDao.getNoteById(id).firstOrNull()?.let { true } ?: false
 
     override suspend fun insertNote(note: Note) =
         noteDao.insertNote(noteMapper.mapFrom(note))

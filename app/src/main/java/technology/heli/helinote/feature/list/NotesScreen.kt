@@ -15,9 +15,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import technology.heli.helinote.core.ui.component.NoteItem
@@ -30,14 +27,17 @@ fun NotesScreen(
     viewModel: NotesViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsState()
-    var isGridLayout by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text(text = "All Notes") },
                 actions = {
-                    IconButton(onClick = { isGridLayout = !isGridLayout }) {
+                    IconButton(
+                        onClick = {
+                            viewModel.submitAction(NotesAction.OnLayoutToggled)
+                        }
+                    ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Default.List,
                             contentDescription = "Toggle Layout"
@@ -58,7 +58,7 @@ fun NotesScreen(
     ) { paddingValues ->
         LazyVerticalStaggeredGrid(
             contentPadding = paddingValues,
-            columns = StaggeredGridCells.Fixed(if (isGridLayout) 2 else 1),
+            columns = StaggeredGridCells.Fixed(state.cells),
             content = {
                 items(count = state.notes.count()) { index ->
                     state.notes[index].let { note ->

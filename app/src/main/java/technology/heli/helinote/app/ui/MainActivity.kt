@@ -27,7 +27,10 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             HeliNoteTheme {
-                AppNavHost(onNavigateToExactAlarmSettings = { navigateToExactAlarmSettings() })
+                AppNavHost(
+                    onNavigateToExactAlarmSettings = { navigateToExactAlarmSettings() },
+                    onNavigateToNotificationSettings = { navigateToNotificationSettings() }
+                )
             }
         }
     }
@@ -38,12 +41,30 @@ class MainActivity : ComponentActivity() {
                 .also { startActivity(it) }
         }
     }
+
+    private fun navigateToNotificationSettings() {
+        Intent().apply {
+            when {
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.O -> {
+                    action = Settings.ACTION_APP_NOTIFICATION_SETTINGS
+                    putExtra(Settings.EXTRA_APP_PACKAGE, packageName)
+                }
+
+                else -> {
+                    action = "android.settings.APP_NOTIFICATION_SETTINGS"
+                    putExtra("app_package", packageName)
+                    putExtra("app_uid", applicationInfo.uid)
+                }
+            }
+        }.also { startActivity(it) }
+    }
 }
 
 @Composable
 fun AppNavHost(
     navController: NavHostController = rememberNavController(),
-    onNavigateToExactAlarmSettings: () -> Unit
+    onNavigateToExactAlarmSettings: () -> Unit,
+    onNavigateToNotificationSettings: () -> Unit
 ) {
     NavHost(navController = navController, startDestination = Screen.NoteListScreen.route) {
         composable(route = Screen.NoteListScreen.route) {
@@ -62,7 +83,9 @@ fun AppNavHost(
             AddEditNoteScreen(
                 navController = navController,
                 noteId = noteId,
-                onNavigateToExactAlarmSettings = { onNavigateToExactAlarmSettings() })
+                onNavigateToExactAlarmSettings = { onNavigateToExactAlarmSettings() },
+                onNavigateToNotificationSettings = { onNavigateToNotificationSettings() }
+            )
         }
     }
 }

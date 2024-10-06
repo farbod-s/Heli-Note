@@ -1,19 +1,25 @@
 package technology.heli.helinote.feature.notification
 
+import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Build
 import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
 import dagger.hilt.android.qualifiers.ApplicationContext
 import technology.heli.helinote.R
 import technology.heli.helinote.app.ui.MainActivity
+import technology.heli.helinote.core.database.store.PreferencesDataStore
 import javax.inject.Inject
 
 class NotificationHelper @Inject constructor(
-    @ApplicationContext private val context: Context
+    @ApplicationContext private val context: Context,
+    private val preferences: PreferencesDataStore,
 ) {
     companion object {
         const val CHANNEL_ID = "reminder_channel_id"
@@ -64,5 +70,25 @@ class NotificationHelper @Inject constructor(
             .build()
 
         notificationManager.notify(notificationId, notification)
+    }
+
+    fun areNotificationsEnabled(): Boolean {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            return NotificationManagerCompat.from(context).areNotificationsEnabled()
+        }
+        return true
+    }
+
+    fun isPostNotificationPermissionGranted(): Boolean {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                return false
+            }
+        }
+        return true
     }
 }

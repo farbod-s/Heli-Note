@@ -43,7 +43,8 @@ fun AddEditNoteScreen(
     navController: NavController,
     noteId: Long,
     viewModel: AddEditNoteViewModel = hiltViewModel(),
-    onNavigateToExactAlarmSettings: () -> Unit
+    onNavigateToExactAlarmSettings: () -> Unit,
+    onNavigateToNotificationSettings: () -> Unit
 ) {
     val state by viewModel.state.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -53,6 +54,8 @@ fun AddEditNoteScreen(
     ) { isGranted: Boolean ->
         if (isGranted) {
             viewModel.submitAction(AddEditNoteAction.OnSaveClicked)
+        } else {
+            viewModel.submitAction(AddEditNoteAction.OnNotificationPermissionRejected)
         }
     }
 
@@ -70,7 +73,7 @@ fun AddEditNoteScreen(
                     )
                     if (result == SnackbarResult.ActionPerformed) {
                         when (event.action) {
-                            is UiEventAction.OpenExactAlarmPermission -> {
+                            is UiEventAction.OpenExactAlarmSettings -> {
                                 onNavigateToExactAlarmSettings()
                             }
 
@@ -78,6 +81,10 @@ fun AddEditNoteScreen(
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                                     notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
                                 }
+                            }
+
+                            is UiEventAction.OpenNotificationSettings -> {
+                                onNavigateToNotificationSettings()
                             }
 
                             else -> Unit

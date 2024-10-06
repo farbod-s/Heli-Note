@@ -25,15 +25,19 @@ class UpdateNoteUseCase @Inject constructor(
             throw InvalidNoteException("The content can't be empty.")
         }
 
+        var isNewNote = false
         var noteId: Long? = null
         try {
+            isNewNote = noteRepository.isNoteExists(note.id).not()
             noteId = noteRepository.insertNote(note)
             addReminderUseCase(note = note.copy(id = noteId), remindersToAdd = remindersToAdd)
             removeReminderUseCase(remindersToRemove = remindersToRemove)
         } catch (exception: Exception) {
             // Rollback
             noteId?.let {
-                noteRepository.deleteNoteById(it)
+                if (isNewNote) {
+                    noteRepository.deleteNoteById(it)
+                }
             }
             throw exception
         }
