@@ -6,7 +6,7 @@ import technology.heli.helinote.core.domain.repository.ReminderRepository
 import technology.heli.helinote.feature.notification.scheduler.ReminderScheduler
 import javax.inject.Inject
 
-class AddRemindersUseCase @Inject constructor(
+open class AddRemindersUseCase @Inject constructor(
     private val reminderRepository: ReminderRepository,
     private val reminderScheduler: ReminderScheduler,
 ) {

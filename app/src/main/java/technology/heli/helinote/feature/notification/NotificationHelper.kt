@@ -14,12 +14,10 @@ import androidx.core.content.ContextCompat
 import dagger.hilt.android.qualifiers.ApplicationContext
 import technology.heli.helinote.R
 import technology.heli.helinote.app.ui.MainActivity
-import technology.heli.helinote.core.database.store.PreferencesDataStore
 import javax.inject.Inject
 
 class NotificationHelper @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val preferences: PreferencesDataStore,
 ) {
     companion object {
         const val CHANNEL_ID = "reminder_channel_id"
