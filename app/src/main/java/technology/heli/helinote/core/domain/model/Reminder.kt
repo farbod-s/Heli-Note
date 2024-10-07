@@ -1,7 +1,7 @@
 package technology.heli.helinote.core.domain.model
 
 import java.text.SimpleDateFormat
-import java.util.Date
+import java.util.Calendar
 import java.util.Locale
 
 data class Reminder(
@@ -12,8 +12,30 @@ data class Reminder(
 ) {
 
     fun formatAsReadableDateTime(): String {
-        val formatter = SimpleDateFormat("MMMM dd, yyyy, HH:mm", Locale.getDefault())
-        val reminderDate = Date(this.timestamp)
-        return formatter.format(reminderDate)
+        val now = Calendar.getInstance()
+        val targetDate = Calendar.getInstance().apply { timeInMillis = timestamp }
+
+        val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+        val time = timeFormat.format(timestamp)
+
+        val sameDay = now[Calendar.DAY_OF_YEAR] == targetDate[Calendar.DAY_OF_YEAR] &&
+                now[Calendar.YEAR] == targetDate[Calendar.YEAR]
+        val tomorrow = now[Calendar.DAY_OF_YEAR] + 1 == targetDate[Calendar.DAY_OF_YEAR] &&
+                now[Calendar.YEAR] == targetDate[Calendar.YEAR]
+        val nextWeek =
+            targetDate[Calendar.WEEK_OF_YEAR] == now[Calendar.WEEK_OF_YEAR] + 1 &&
+                    now[Calendar.YEAR] == targetDate[Calendar.YEAR]
+        val nextMonth = now[Calendar.MONTH] + 1 == targetDate[Calendar.MONTH] &&
+                now[Calendar.YEAR] == targetDate[Calendar.YEAR]
+        val nextYear = now[Calendar.YEAR] + 1 == targetDate[Calendar.YEAR]
+
+        return when {
+            sameDay -> "today $time"
+            tomorrow -> "tomorrow $time"
+            nextWeek -> "next week $time"
+            nextMonth -> "next month $time"
+            nextYear -> "next year $time"
+            else -> SimpleDateFormat("MMM d", Locale.getDefault()).format(timestamp) + " $time"
+        }
     }
 }

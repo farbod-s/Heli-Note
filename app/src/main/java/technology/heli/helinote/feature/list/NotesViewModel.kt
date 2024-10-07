@@ -9,11 +9,13 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import technology.heli.helinote.core.database.store.PreferencesDataStore
 import technology.heli.helinote.core.domain.usecase.GetNotesUseCase
+import technology.heli.helinote.core.domain.usecase.RemovePastRemindersUseCase
 import javax.inject.Inject
 
 @HiltViewModel
 class NotesViewModel @Inject constructor(
     private val getNotesUseCase: GetNotesUseCase,
+    private val removePastRemindersUseCase: RemovePastRemindersUseCase,
     private val preferences: PreferencesDataStore,
 ) : ViewModel() {
 
@@ -22,12 +24,14 @@ class NotesViewModel @Inject constructor(
 
     private var getNotesJob: Job? = null
     private var getConfigsJob: Job? = null
+    private var removePastRemindersJob: Job? = null
 
     private var isGridLayout = false
 
     init {
         getNotes()
         getConfigs()
+        removePastReminders()
     }
 
     fun submitAction(action: NotesAction) {
@@ -52,6 +56,13 @@ class NotesViewModel @Inject constructor(
                 _state.value = _state.value.copy(cells = cells)
                 isGridLayout = cells > 1
             }
+        }
+    }
+
+    private fun removePastReminders() {
+        removePastRemindersJob?.cancel()
+        removePastRemindersJob = viewModelScope.launch {
+            removePastRemindersUseCase()
         }
     }
 

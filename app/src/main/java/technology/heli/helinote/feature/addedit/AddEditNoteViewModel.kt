@@ -67,7 +67,8 @@ class AddEditNoteViewModel @Inject constructor(
             )
 
             is AddEditNoteAction.OnReminderRemoved -> removeReminder(action.reminderId)
-            AddEditNoteAction.OnNotificationPermissionRejected -> notificationPermissionRejected()
+            is AddEditNoteAction.OnNotificationPermissionRejected -> notificationPermissionRejected()
+            is AddEditNoteAction.OnNotificationPermissionAccepted -> notificationPermissionAccepted()
             is AddEditNoteAction.OnContentFocusChanged -> contentFocusChanged(action.focused)
             is AddEditNoteAction.OnTitleFocusChanged -> titleFocusChanged(action.focused)
         }
@@ -155,12 +156,12 @@ class AddEditNoteViewModel @Inject constructor(
         }
     }
 
-    private fun addReminder(date: Long, time: Long, repeatType: String) {
+    private fun addReminder(date: Long, time: Long, repeatType: RepeatType) {
         viewModelScope.launch {
             val dateTimeInMillis = getDateTimeInMillis(date = date, time = time)
             val reminder = Reminder(
                 timestamp = dateTimeInMillis,
-                repeatType = RepeatType.valueOf(repeatType),
+                repeatType = repeatType,
                 noteId = currentNoteId
             )
             remindersToAdd.add(reminder)
@@ -210,6 +211,10 @@ class AddEditNoteViewModel @Inject constructor(
                 )
             }
         }
+    }
+
+    private fun notificationPermissionAccepted() {
+        saveNote()
     }
 
     private fun titleFocusChanged(focused: Boolean) {

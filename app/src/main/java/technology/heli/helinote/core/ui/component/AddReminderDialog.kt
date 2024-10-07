@@ -4,7 +4,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenuItem
@@ -13,7 +12,9 @@ import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
@@ -21,6 +22,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import technology.heli.helinote.core.domain.model.RepeatType
 import java.text.SimpleDateFormat
@@ -32,8 +34,8 @@ import java.util.Locale
 @Composable
 fun AddReminderDialog(
     onDismiss: () -> Unit,
-    onSave: (Long, Long, String) -> Unit,
-    repeatTypes: List<String> = RepeatType.entries.map { it.name },
+    onSave: (Long, Long, RepeatType) -> Unit,
+    repeatTypes: List<RepeatType> = RepeatType.entries,
     currentTime: Calendar = Calendar.getInstance()
 ) {
     var spinnerExpanded by remember { mutableStateOf(false) }
@@ -72,22 +74,20 @@ fun AddReminderDialog(
         text = {
             Column {
                 // Date Picker
-                Button(
+                PickerButton(
+                    text = formatSelectedDate(selectedDate),
                     onClick = {
                         showDatePicker = true
                     }
-                ) {
-                    Text("Select Date: ${formatSelectedDate(selectedDate)}")
-                }
+                )
                 Spacer(modifier = Modifier.height(8.dp))
                 // Time Picker
-                Button(
+                PickerButton(
+                    text = formatSelectedTime(selectedTime),
                     onClick = {
                         showTimePicker = true
                     }
-                ) {
-                    Text("Select Time: ${formatSelectedTime(selectedTime)}")
-                }
+                )
                 Spacer(modifier = Modifier.height(8.dp))
                 // Spinner for Repeat Type
                 ExposedDropdownMenuBox(
@@ -96,15 +96,24 @@ fun AddReminderDialog(
                 ) {
                     TextField(
                         readOnly = true,
-                        value = selectedRepeatType,
+                        value = selectedRepeatType.toString(),
                         onValueChange = { },
-                        label = { Text("Repeat Type") },
                         trailingIcon = {
                             ExposedDropdownMenuDefaults.TrailingIcon(expanded = spinnerExpanded)
                         },
                         modifier = Modifier
                             .menuAnchor(MenuAnchorType.PrimaryNotEditable)
-                            .clickable { spinnerExpanded = true }
+                            .clickable { spinnerExpanded = true },
+                        colors = TextFieldDefaults.colors(
+                            unfocusedContainerColor = Color.Transparent,
+                            focusedContainerColor = Color.Transparent,
+                            focusedIndicatorColor = Color.LightGray,
+                            unfocusedIndicatorColor = Color.LightGray,
+                            focusedTrailingIconColor = Color.DarkGray,
+                            unfocusedTrailingIconColor = Color.DarkGray,
+                            focusedTextColor = Color.Black,
+                            unfocusedTextColor = Color.Black
+                        )
                     )
                     ExposedDropdownMenu(
                         expanded = spinnerExpanded,
@@ -113,7 +122,7 @@ fun AddReminderDialog(
                         repeatTypes.forEach { repeat ->
                             DropdownMenuItem(
                                 text = {
-                                    Text(text = repeat)
+                                    Text(text = repeat.toString())
                                 },
                                 onClick = {
                                     selectedRepeatType = repeat
@@ -135,7 +144,7 @@ fun AddReminderDialog(
             }
         },
         dismissButton = {
-            Button(onClick = onDismiss) {
+            TextButton(onClick = onDismiss) {
                 Text("Cancel")
             }
         }
@@ -143,7 +152,7 @@ fun AddReminderDialog(
 }
 
 fun formatSelectedDate(dateInMillis: Long): String {
-    val formatter = SimpleDateFormat("EEE, MMM d, yyyy", Locale.getDefault())
+    val formatter = SimpleDateFormat("d MMM, yyyy", Locale.getDefault())
     return formatter.format(Date(dateInMillis))
 }
 

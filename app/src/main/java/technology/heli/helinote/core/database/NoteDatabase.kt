@@ -4,12 +4,15 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
+import technology.heli.helinote.core.database.converter.RepeatTypeConverter
 import technology.heli.helinote.core.database.dao.NoteDao
 import technology.heli.helinote.core.database.dao.ReminderDao
 import technology.heli.helinote.core.database.entity.NoteEntity
 import technology.heli.helinote.core.database.entity.ReminderEntity
 
 @Database(entities = [NoteEntity::class, ReminderEntity::class], version = 1)
+@TypeConverters(RepeatTypeConverter::class)
 abstract class NoteDatabase : RoomDatabase() {
     abstract fun noteDao(): NoteDao
 

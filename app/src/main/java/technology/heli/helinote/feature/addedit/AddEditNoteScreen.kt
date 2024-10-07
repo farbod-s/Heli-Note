@@ -55,7 +55,7 @@ fun AddEditNoteScreen(
         contract = ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
         if (isGranted) {
-            viewModel.submitAction(AddEditNoteAction.OnSaveClicked)
+            viewModel.submitAction(AddEditNoteAction.OnNotificationPermissionAccepted)
         } else {
             viewModel.submitAction(AddEditNoteAction.OnNotificationPermissionRejected)
         }
@@ -186,7 +186,7 @@ fun AddEditNoteScreen(
                     viewModel.submitAction(AddEditNoteAction.OnContentFocusChanged(it.isFocused))
                 },
                 isHintVisible = state.isContentHintVisible,
-                textStyle = MaterialTheme.typography.bodyMedium,
+                textStyle = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.fillMaxHeight()
             )
         }

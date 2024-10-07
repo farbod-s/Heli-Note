@@ -10,13 +10,13 @@ import technology.heli.helinote.core.database.entity.ReminderEntity
 @Dao
 interface ReminderDao {
 
-    @Query("SELECT * FROM reminder_table")
+    @Query("SELECT * FROM reminder_table ORDER BY timestamp ASC")
     fun getReminders(): Flow<List<ReminderEntity>>
 
-    @Query("SELECT * FROM reminder_table WHERE noteId = :noteId")
+    @Query("SELECT * FROM reminder_table WHERE noteId = :noteId ORDER BY timestamp ASC")
     fun getRemindersByNoteId(noteId: Long): Flow<List<ReminderEntity>>
 
-    @Query("SELECT * FROM reminder_table WHERE timestamp < :timestamp")
+    @Query("SELECT * FROM reminder_table WHERE timestamp < :timestamp ORDER BY timestamp ASC")
     suspend fun getPastReminders(timestamp: Long): List<ReminderEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
