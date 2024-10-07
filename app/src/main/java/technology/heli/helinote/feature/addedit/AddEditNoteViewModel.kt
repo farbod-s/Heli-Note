@@ -79,6 +79,8 @@ class AddEditNoteViewModel @Inject constructor(
                     title = note.title,
                     content = note.content,
                     reminders = note.reminders
+                        .plus(remindersToAdd)
+                        .minus(remindersToRemove)
                 )
             }
         }
@@ -98,6 +100,8 @@ class AddEditNoteViewModel @Inject constructor(
                     remindersToAdd = remindersToAdd,
                     remindersToRemove = remindersToRemove
                 )
+                remindersToAdd.clear()
+                remindersToRemove.clear()
                 _uiEvent.emit(AddEditNoteUiEvent.NoteSaved)
             } catch (exception: InvalidNoteException) {
                 _uiEvent.emit(
