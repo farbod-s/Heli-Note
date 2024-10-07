@@ -22,11 +22,22 @@ fun NoteItem(note: Note, onClick: () -> Unit) {
             .padding(8.dp)
             .clickable(onClick = onClick)
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(text = note.title, style = MaterialTheme.typography.titleMedium)
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(text = note.content, style = MaterialTheme.typography.bodyMedium)
+        Column(modifier = Modifier.padding(horizontal = 8.dp)) {
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = note.title,
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(horizontal = 8.dp)
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = note.content,
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.padding(horizontal = 8.dp)
+            )
+            Spacer(modifier = Modifier.height(8.dp))
             RemindersSection(note.reminders)
+            Spacer(modifier = Modifier.height(8.dp))
         }
     }
 }

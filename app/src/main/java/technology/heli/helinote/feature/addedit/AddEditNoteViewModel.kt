@@ -68,6 +68,8 @@ class AddEditNoteViewModel @Inject constructor(
 
             is AddEditNoteAction.OnReminderRemoved -> removeReminder(action.reminderId)
             AddEditNoteAction.OnNotificationPermissionRejected -> notificationPermissionRejected()
+            is AddEditNoteAction.OnContentFocusChanged -> contentFocusChanged(action.focused)
+            is AddEditNoteAction.OnTitleFocusChanged -> titleFocusChanged(action.focused)
         }
     }
 
@@ -78,6 +80,8 @@ class AddEditNoteViewModel @Inject constructor(
                 _state.value = _state.value.copy(
                     title = note.title,
                     content = note.content,
+                    isTitleHintVisible = false,
+                    isContentHintVisible = false,
                     reminders = note.reminders
                         .plus(remindersToAdd)
                         .minus(remindersToRemove)
@@ -205,6 +209,22 @@ class AddEditNoteViewModel @Inject constructor(
                     value = true
                 )
             }
+        }
+    }
+
+    private fun titleFocusChanged(focused: Boolean) {
+        viewModelScope.launch {
+            _state.value = _state.value.copy(
+                isTitleHintVisible = !focused && _state.value.title.isBlank()
+            )
+        }
+    }
+
+    private fun contentFocusChanged(focused: Boolean) {
+        viewModelScope.launch {
+            _state.value = _state.value.copy(
+                isContentHintVisible = !focused && _state.value.content.isBlank()
+            )
         }
     }
 }

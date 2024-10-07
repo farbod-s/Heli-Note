@@ -5,22 +5,21 @@ import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
-import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -35,7 +34,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import kotlinx.coroutines.flow.collectLatest
 import technology.heli.helinote.core.ui.component.AddReminderDialog
+import technology.heli.helinote.core.ui.component.CircularFloatingActionButton
+import technology.heli.helinote.core.ui.component.OutlinedIconButton
 import technology.heli.helinote.core.ui.component.RemindersSection
+import technology.heli.helinote.core.ui.component.TransparentHintTextField
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -117,33 +119,38 @@ fun AddEditNoteScreen(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
             TopAppBar(
-                title = { Text(text = if (noteId == 0L) "Add Note" else "Edit Note") },
+                title = {},
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Default.ArrowBack,
-                            contentDescription = "Back"
-                        )
-                    }
+                    OutlinedIconButton(
+                        imageVector = Icons.AutoMirrored.Default.ArrowBack,
+                        contentDescription = "Back",
+                        onClick = { navController.popBackStack() }
+                    )
                 },
                 actions = {
-                    IconButton(onClick = { showReminderDialog = true }) {
-                        Icon(Icons.Default.Notifications, contentDescription = "Add Reminder")
-                    }
+                    OutlinedIconButton(
+                        imageVector = Icons.Default.Notifications,
+                        contentDescription = "Add Reminder",
+                        onClick = { showReminderDialog = true }
+                    )
                 }
             )
         },
         floatingActionButton = {
-            FloatingActionButton(
+            CircularFloatingActionButton(
+                imageVector = Icons.Default.Check,
+                contentDescription = "Save Note",
                 onClick = {
                     viewModel.submitAction(AddEditNoteAction.OnSaveClicked)
                 }
-            ) {
-                Icon(imageVector = Icons.Default.Check, contentDescription = "Save Note")
-            }
+            )
         }
     ) { paddingValues ->
-        Column(modifier = Modifier.padding(paddingValues)) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+        ) {
             RemindersSection(
                 reminders = state.reminders.toList(),
                 onRemoveReminder = { reminderId ->
@@ -154,26 +161,33 @@ fun AddEditNoteScreen(
                     )
                 }
             )
-            OutlinedTextField(
-                value = state.title,
+            Spacer(modifier = Modifier.height(16.dp))
+            TransparentHintTextField(
+                text = state.title,
+                hint = "Title",
                 onValueChange = {
                     viewModel.submitAction(AddEditNoteAction.OnTitleChanged(it))
                 },
-                label = { Text(text = "Title") },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)
+                onFocusChange = {
+                    viewModel.submitAction(AddEditNoteAction.OnTitleFocusChanged(it.isFocused))
+                },
+                isHintVisible = state.isTitleHintVisible,
+                singleLine = true,
+                textStyle = MaterialTheme.typography.titleLarge,
             )
-            OutlinedTextField(
-                value = state.content,
+            Spacer(modifier = Modifier.height(16.dp))
+            TransparentHintTextField(
+                text = state.content,
+                hint = "Note",
                 onValueChange = {
                     viewModel.submitAction(AddEditNoteAction.OnContentChanged(it))
                 },
-                label = { Text(text = "Content") },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)
-                    .weight(1f)
+                onFocusChange = {
+                    viewModel.submitAction(AddEditNoteAction.OnContentFocusChanged(it.isFocused))
+                },
+                isHintVisible = state.isContentHintVisible,
+                textStyle = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.fillMaxHeight()
             )
         }
     }
