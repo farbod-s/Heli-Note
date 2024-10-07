@@ -11,13 +11,13 @@ import technology.heli.helinote.core.domain.model.RepeatType
 @Dao
 interface ReminderDao {
 
-    @Query("SELECT * FROM reminder_table ORDER BY timestamp ASC")
+    @Query("SELECT * FROM reminder_table")
     fun getReminders(): Flow<List<ReminderEntity>>
 
-    @Query("SELECT * FROM reminder_table WHERE noteId = :noteId ORDER BY timestamp ASC")
+    @Query("SELECT * FROM reminder_table WHERE noteId = :noteId")
     fun getRemindersByNoteId(noteId: Long): Flow<List<ReminderEntity>>
 
-    @Query("SELECT * FROM reminder_table WHERE timestamp < :timestamp AND repeatType = :repeatType ORDER BY timestamp ASC")
+    @Query("SELECT * FROM reminder_table WHERE timestamp < :timestamp AND repeatType = :repeatType")
     suspend fun getPastReminders(timestamp: Long, repeatType: RepeatType): List<ReminderEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
