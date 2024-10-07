@@ -11,7 +11,7 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Icon
@@ -37,11 +37,11 @@ fun ReminderChip(reminder: Reminder, onRemoveReminder: ((Long) -> Unit)? = null)
                     .fillMaxHeight()
             ) {
                 Icon(
-                    imageVector = Icons.Default.DateRange,
+                    imageVector = Icons.Default.Notifications,
                     contentDescription = "Reminder Icon",
                     tint = MaterialTheme.colorScheme.onPrimary,
                     modifier = Modifier
-                        .size(12.dp)
+                        .size(14.dp)
                         .align(Alignment.CenterVertically)
                 )
                 Spacer(modifier = Modifier.width(8.dp))

@@ -50,7 +50,7 @@ fun AddReminderDialog(
     var showTimePicker by remember { mutableStateOf(false) }
 
     if (showDatePicker) {
-        DatePickerDialog(
+        FutureDatePickerDialog(
             onDismiss = { showDatePicker = false },
             onDateSelected = { timestamp ->
                 timestamp?.let { selectedDate = it }

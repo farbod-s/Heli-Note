@@ -18,6 +18,20 @@ data class Reminder(
         val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
         val time = timeFormat.format(timestamp)
 
+        // Check if the reminder time has passed for today
+        val currentTimePassed = now.after(targetDate)
+
+        // Adjust the target date based on repeat type if the time has passed
+        if (currentTimePassed) {
+            when (repeatType) {
+                RepeatType.DAILY -> targetDate.add(Calendar.DAY_OF_YEAR, 1)
+                RepeatType.WEEKLY -> targetDate.add(Calendar.WEEK_OF_YEAR, 1)
+                RepeatType.MONTHLY -> targetDate.add(Calendar.MONTH, 1)
+                RepeatType.YEARLY -> targetDate.add(Calendar.YEAR, 1)
+                RepeatType.NONE -> {}
+            }
+        }
+
         val sameDay = now[Calendar.DAY_OF_YEAR] == targetDate[Calendar.DAY_OF_YEAR] &&
                 now[Calendar.YEAR] == targetDate[Calendar.YEAR]
         val tomorrow = now[Calendar.DAY_OF_YEAR] + 1 == targetDate[Calendar.DAY_OF_YEAR] &&
@@ -35,7 +49,7 @@ data class Reminder(
             nextWeek -> "Next week $time"
             nextMonth -> "Next month $time"
             nextYear -> "Next year $time"
-            else -> SimpleDateFormat("MMM d", Locale.getDefault()).format(timestamp) + " $time"
+            else -> SimpleDateFormat("MMM d, yyyy", Locale.getDefault()).format(timestamp) + " $time"
         }
     }
 }
