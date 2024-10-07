@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,8 +20,8 @@ fun OutlinedIconButton(
     contentDescription: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    iconColor: Color = Color.DarkGray,
-    borderColor: Color = Color.LightGray
+    iconColor: Color = MaterialTheme.colorScheme.onSurface,
+    borderColor: Color = MaterialTheme.colorScheme.outline
 ) {
     IconButton(onClick = onClick) {
         Box(
@@ -28,7 +29,7 @@ fun OutlinedIconButton(
                 .size(36.dp)
                 .border(
                     width = 1.dp,
-                    color = borderColor,
+                    color = borderColor.copy(alpha = 0.25f),
                     shape = CircleShape
                 ),
             contentAlignment = Alignment.Center

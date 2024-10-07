@@ -4,12 +4,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusState
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 
@@ -31,7 +31,7 @@ fun TransparentHintTextField(
             value = text,
             onValueChange = onValueChange,
             singleLine = singleLine,
-            textStyle = textStyle,
+            textStyle = textStyle.copy(color = MaterialTheme.colorScheme.onBackground),
             modifier = modifier
                 .fillMaxWidth()
                 .onFocusChanged {
@@ -39,7 +39,11 @@ fun TransparentHintTextField(
                 }
         )
         if (isHintVisible) {
-            Text(text = hint, style = textStyle, color = Color.DarkGray)
+            Text(
+                text = hint,
+                style = textStyle.copy(color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.75f)),
+                color = MaterialTheme.colorScheme.onSurface
+            )
         }
     }
 }

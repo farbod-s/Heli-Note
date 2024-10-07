@@ -18,12 +18,12 @@ fun CircularFloatingActionButton(
         onClick = onClick,
         shape = CircleShape,
         containerColor = MaterialTheme.colorScheme.primary,
-        contentColor = Color.White
+        contentColor = MaterialTheme.colorScheme.onPrimary
     ) {
         Icon(
             imageVector = imageVector,
             contentDescription = contentDescription,
-            tint = Color.White
+            tint = MaterialTheme.colorScheme.onPrimary
         )
     }
 }

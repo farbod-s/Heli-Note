@@ -10,6 +10,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -107,12 +108,12 @@ fun AddReminderDialog(
                         colors = TextFieldDefaults.colors(
                             unfocusedContainerColor = Color.Transparent,
                             focusedContainerColor = Color.Transparent,
-                            focusedIndicatorColor = Color.LightGray,
-                            unfocusedIndicatorColor = Color.LightGray,
-                            focusedTrailingIconColor = Color.DarkGray,
-                            unfocusedTrailingIconColor = Color.DarkGray,
-                            focusedTextColor = Color.Black,
-                            unfocusedTextColor = Color.Black
+                            focusedIndicatorColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f),
+                            unfocusedIndicatorColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f),
+                            focusedTrailingIconColor = MaterialTheme.colorScheme.onSurface,
+                            unfocusedTrailingIconColor = MaterialTheme.colorScheme.onSurface,
+                            focusedTextColor = MaterialTheme.colorScheme.onBackground,
+                            unfocusedTextColor = MaterialTheme.colorScheme.onBackground
                         )
                     )
                     ExposedDropdownMenu(

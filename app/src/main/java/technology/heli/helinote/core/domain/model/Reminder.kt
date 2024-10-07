@@ -30,11 +30,11 @@ data class Reminder(
         val nextYear = now[Calendar.YEAR] + 1 == targetDate[Calendar.YEAR]
 
         return when {
-            sameDay -> "today $time"
-            tomorrow -> "tomorrow $time"
-            nextWeek -> "next week $time"
-            nextMonth -> "next month $time"
-            nextYear -> "next year $time"
+            sameDay -> "Today $time"
+            tomorrow -> "Tomorrow $time"
+            nextWeek -> "Next week $time"
+            nextMonth -> "Next month $time"
+            nextYear -> "Next year $time"
             else -> SimpleDateFormat("MMM d", Locale.getDefault()).format(timestamp) + " $time"
         }
     }

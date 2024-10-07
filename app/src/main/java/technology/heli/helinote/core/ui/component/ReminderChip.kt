@@ -21,7 +21,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -40,7 +39,7 @@ fun ReminderChip(reminder: Reminder, onRemoveReminder: ((Long) -> Unit)? = null)
                 Icon(
                     imageVector = Icons.Default.DateRange,
                     contentDescription = "Reminder Icon",
-                    tint = Color.White,
+                    tint = MaterialTheme.colorScheme.onPrimary,
                     modifier = Modifier
                         .size(12.dp)
                         .align(Alignment.CenterVertically)
@@ -48,7 +47,7 @@ fun ReminderChip(reminder: Reminder, onRemoveReminder: ((Long) -> Unit)? = null)
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     text = reminder.formatAsReadableDateTime(),
-                    color = Color.White,
+                    color = MaterialTheme.colorScheme.onPrimary,
                     fontSize = 12.sp,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
@@ -62,7 +61,7 @@ fun ReminderChip(reminder: Reminder, onRemoveReminder: ((Long) -> Unit)? = null)
                     Icon(
                         imageVector = Icons.Default.Clear,
                         contentDescription = "Remove Reminder",
-                        tint = Color.White,
+                        tint = MaterialTheme.colorScheme.onPrimary,
                         modifier = Modifier.size(16.dp)
                     )
                 }

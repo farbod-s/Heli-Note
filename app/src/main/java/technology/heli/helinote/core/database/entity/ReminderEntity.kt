@@ -20,6 +20,6 @@ data class ReminderEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long,
     val timestamp: Long,
-    val repeatType: RepeatType = RepeatType.NONE,
+    val repeatType: RepeatType,
     val noteId: Long
 )

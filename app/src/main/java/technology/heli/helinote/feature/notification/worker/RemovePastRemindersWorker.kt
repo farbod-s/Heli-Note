@@ -1,7 +1,6 @@
 package technology.heli.helinote.feature.notification.worker
 
 import android.content.Context
-import android.util.Log
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
@@ -21,7 +20,6 @@ class RemovePastRemindersWorker @AssistedInject constructor(
             removePastRemindersUseCase()
             Result.success()
         } catch (e: Exception) {
-            Log.d("XXX", e.message.orEmpty())
             Result.retry()
         }
     }

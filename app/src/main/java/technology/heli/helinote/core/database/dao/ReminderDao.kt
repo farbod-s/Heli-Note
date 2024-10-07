@@ -6,6 +6,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
 import technology.heli.helinote.core.database.entity.ReminderEntity
+import technology.heli.helinote.core.domain.model.RepeatType
 
 @Dao
 interface ReminderDao {
@@ -16,8 +17,8 @@ interface ReminderDao {
     @Query("SELECT * FROM reminder_table WHERE noteId = :noteId ORDER BY timestamp ASC")
     fun getRemindersByNoteId(noteId: Long): Flow<List<ReminderEntity>>
 
-    @Query("SELECT * FROM reminder_table WHERE timestamp < :timestamp ORDER BY timestamp ASC")
-    suspend fun getPastReminders(timestamp: Long): List<ReminderEntity>
+    @Query("SELECT * FROM reminder_table WHERE timestamp < :timestamp AND repeatType = :repeatType ORDER BY timestamp ASC")
+    suspend fun getPastReminders(timestamp: Long, repeatType: RepeatType): List<ReminderEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertReminder(reminder: ReminderEntity): Long
