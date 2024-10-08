@@ -30,7 +30,7 @@ fun ReminderChip(reminder: Reminder, onRemoveReminder: ((Long) -> Unit)? = null)
                 imageVector = Icons.Default.Notifications,
                 contentDescription = "Reminder Icon",
                 tint = MaterialTheme.colorScheme.onPrimary,
-                modifier = Modifier.size(14.dp)
+                modifier = Modifier.size(16.dp)
             )
         },
         label = {
