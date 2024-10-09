@@ -15,8 +15,8 @@ class DefaultNoteRepository @Inject constructor(
     private val noteMapper: DataMapper<NoteEntity, Note>
 ) : NoteRepository {
 
-    override fun getNotes(): Flow<List<Note>> =
-        noteDao.getNotes().map { notes -> notes.map { noteMapper.mapTo(it) } }
+    override fun getNotes(query: String?): Flow<List<Note>> =
+        noteDao.getNotes(query).map { notes -> notes.map { noteMapper.mapTo(it) } }
 
     override fun getNoteById(id: Long): Flow<Note?> =
         noteDao.getNoteById(id).map { note -> note?.let { noteMapper.mapTo(it) } }

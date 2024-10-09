@@ -37,13 +37,14 @@ class NotesViewModel @Inject constructor(
     fun submitAction(action: NotesAction) {
         when (action) {
             is NotesAction.OnLayoutToggled -> changeLayout()
+            is NotesAction.OnSearch -> searchNote(action.query)
         }
     }
 
-    private fun getNotes() {
+    private fun getNotes(query: String? = null) {
         getNotesJob?.cancel()
         getNotesJob = viewModelScope.launch {
-            getNotesUseCase().collect { notes ->
+            getNotesUseCase(query).collect { notes ->
                 _state.value = _state.value.copy(notes = notes)
             }
         }
@@ -72,5 +73,9 @@ class NotesViewModel @Inject constructor(
             val cells = if (isGridLayout) 2 else 1
             preferences.setNotesStaggeredGridCells(cells)
         }
+    }
+
+    private fun searchNote(query: String) {
+        getNotes(query)
     }
 }

@@ -11,8 +11,16 @@ import technology.heli.helinote.core.database.entity.NoteEntity
 @Dao
 interface NoteDao {
 
-    @Query("SELECT * FROM note_table ORDER BY timestamp DESC")
-    fun getNotes(): Flow<List<NoteEntity>>
+    @Query(
+        """
+        SELECT * FROM note_table
+        WHERE (:query IS NULL OR :query = '')
+        OR title LIKE '%' || :query || '%'
+        OR content LIKE '%' || :query || '%'
+        ORDER BY timestamp DESC
+    """
+    )
+    fun getNotes(query: String? = null): Flow<List<NoteEntity>>
 
     @Query("SELECT * FROM note_table WHERE id = :id")
     fun getNoteById(id: Long): Flow<NoteEntity?>
