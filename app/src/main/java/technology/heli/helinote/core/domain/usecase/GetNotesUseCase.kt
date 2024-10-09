@@ -12,7 +12,7 @@ class GetNotesUseCase @Inject constructor(
     private val reminderRepository: ReminderRepository,
 ) {
 
-    operator fun invoke(): Flow<List<Note>> = noteRepository.getNotes()
+    operator fun invoke(query: String? = null): Flow<List<Note>> = noteRepository.getNotes(query)
         .combine(reminderRepository.getReminders()) { notes, reminders ->
             notes.map { note ->
                 val associatedReminders = reminders.filter { it.noteId == note.id }
