@@ -8,8 +8,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -22,6 +20,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import technology.heli.helinote.core.ui.component.CircularFloatingActionButton
 import technology.heli.helinote.core.ui.component.NoteItem
+import technology.heli.helinote.core.ui.component.OutlinedIconButton
 import technology.heli.helinote.core.ui.component.SearchTextField
 import technology.heli.helinote.feature.navigation.Screen
 
@@ -37,18 +36,13 @@ fun NotesScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = "Recent All Note") },
+                title = { Text(text = "Recent Notes") },
                 actions = {
-                    IconButton(
-                        onClick = {
-                            viewModel.submitAction(NotesAction.OnLayoutToggled)
-                        }
-                    ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Default.List,
-                            contentDescription = "Toggle Layout"
-                        )
-                    }
+                    OutlinedIconButton(
+                        imageVector = Icons.AutoMirrored.Default.List,
+                        contentDescription = "Toggle Layout",
+                        onClick = { viewModel.submitAction(NotesAction.OnLayoutToggled) }
+                    )
                 }
             )
         },
