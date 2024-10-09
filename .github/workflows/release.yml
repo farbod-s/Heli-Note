@@ -9,6 +9,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
     # Step 1: Checkout the code
@@ -49,7 +51,8 @@ jobs:
       with:
         artifacts: "app/release/*.apk"
         tag: ${{ github.ref }}
-        token: ${{ secrets.GITHUB_TOKEN }}
         name: Release ${{ github.ref_name }}
         body: |
           Automatically generated release for tag ${{ github.ref_name }}.
+      env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
