@@ -14,5 +14,4 @@ updates:
     commit-message:
       prefix: "fix"                # Prefix for commit messages
     open-pull-requests-limit: 5    # Limit the number of open pull requests
-    versioning-strategy: increase  # Optional: specify versioning strategy
 
