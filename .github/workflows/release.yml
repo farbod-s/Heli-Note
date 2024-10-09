@@ -1,0 +1,55 @@
+name: Build and Release APK
+
+on:
+  push:
+    tags:
+      - 'v*'  # Trigger workflow on version tags
+  workflow_dispatch: # Manually trigger the workflow
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Step 1: Checkout the code
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # Step 2: Set up JDK
+    - name: Set up JDK
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'zulu'
+        java-version: '17' # or whichever version your project requires
+
+    # Step 3: Cache Gradle dependencies (optional)
+    - name: Cache Gradle packages
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: ${{ runner.os }}-gradle
+
+    # Step 4: Build APK
+    - name: Build Release APK
+      run: ./gradlew assembleRelease
+
+    # Step 5: Upload APK as artifact
+    - name: Upload Release APK
+      uses: actions/upload-artifact@v3
+      with:
+        name: release-apk
+        path: app/release/*.apk
+
+    # Step 6: Create GitHub Release and upload APK
+    - name: Create Release
+      uses: ncipollo/release-action@v1
+      with:
+        artifacts: "app/release/*.apk"
+        tag: ${{ github.ref }}
+        token: ${{ secrets.GITHUB_TOKEN }}
+        name: Release ${{ github.ref_name }}
+        body: |
+          Automatically generated release for tag ${{ github.ref_name }}.
