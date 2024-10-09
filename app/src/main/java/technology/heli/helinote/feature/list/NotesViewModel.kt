@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import technology.heli.helinote.core.database.store.PreferencesDataStore
@@ -21,6 +22,9 @@ class NotesViewModel @Inject constructor(
 
     private val _state = MutableStateFlow(NotesState())
     val state = _state.asStateFlow()
+
+    private val _searchQuery = MutableStateFlow("")
+    val searchQuery: StateFlow<String> = _searchQuery
 
     private var getNotesJob: Job? = null
     private var getConfigsJob: Job? = null
@@ -76,6 +80,7 @@ class NotesViewModel @Inject constructor(
     }
 
     private fun searchNote(query: String) {
+        _searchQuery.value = query
         getNotes(query)
     }
 }
