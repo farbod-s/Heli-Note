@@ -16,9 +16,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -35,7 +32,7 @@ fun NotesScreen(
     viewModel: NotesViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsState()
-    var searchQuery by remember { mutableStateOf("") }
+    val searchQuery by viewModel.searchQuery.collectAsState()
 
     Scaffold(
         topBar = {
@@ -68,10 +65,7 @@ fun NotesScreen(
         Column(modifier = Modifier.padding(paddingValues)) {
             SearchTextField(
                 query = searchQuery,
-                onQueryChanged = { newQuery ->
-                    searchQuery = newQuery
-                    viewModel.submitAction(NotesAction.OnSearch(searchQuery))
-                }
+                onQueryChanged = { viewModel.submitAction(NotesAction.OnSearch(it)) }
             )
             LazyVerticalStaggeredGrid(
                 modifier = Modifier.padding(8.dp),
