@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.launch
 import technology.heli.helinote.core.database.store.PreferencesDataStore
@@ -77,7 +78,7 @@ class AddEditNoteViewModel @Inject constructor(
     private fun getNote(id: Long) {
         getNoteJob?.cancel()
         getNoteJob = viewModelScope.launch {
-            getNoteUseCase(id).mapNotNull { it }.collect { note ->
+            getNoteUseCase(id).mapNotNull { it }.first().let { note ->
                 _state.value = _state.value.copy(
                     title = note.title,
                     content = note.content,
