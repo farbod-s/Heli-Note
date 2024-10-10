@@ -33,6 +33,7 @@ class DefaultReminderScheduler @Inject constructor(
 
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(context, ReminderBroadcastReceiver::class.java).apply {
+            `package` = context.packageName
             putExtra(EXTRA_REMINDER_ID, reminder.id)
             putExtra(EXTRA_REMINDER_TITLE, reminderTitle)
             putExtra(EXTRA_REMINDER_MESSAGE, reminderMessage)
