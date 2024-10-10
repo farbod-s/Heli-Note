@@ -1,5 +1,8 @@
 # Heli-Note
 
+![Build Status](https://github.com/farbod-s/Heli-Note/actions/workflows/build.yml/badge.svg)
+![Version](https://img.shields.io/github/v/release/farbod-s/Heli-Note)
+
 ### Features
 - adding notes
 - editing notes
