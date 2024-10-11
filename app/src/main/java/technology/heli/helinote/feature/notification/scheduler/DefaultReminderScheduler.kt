@@ -32,8 +32,8 @@ class DefaultReminderScheduler @Inject constructor(
         }
 
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val intent = Intent(context, ReminderBroadcastReceiver::class.java).apply {
-            `package` = context.packageName
+        val intent = Intent().apply {
+            setClassName(context.packageName, ReminderBroadcastReceiver::class.java.name)
             putExtra(EXTRA_REMINDER_ID, reminder.id)
             putExtra(EXTRA_REMINDER_TITLE, reminderTitle)
             putExtra(EXTRA_REMINDER_MESSAGE, reminderMessage)
@@ -73,7 +73,9 @@ class DefaultReminderScheduler @Inject constructor(
 
     override fun cancel(reminderId: Long) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val intent = Intent(context, ReminderBroadcastReceiver::class.java)
+        val intent = Intent().apply {
+            setClassName(context.packageName, ReminderBroadcastReceiver::class.java.name)
+        }
         val pendingIntent = PendingIntent.getBroadcast(
             context,
             reminderId.toInt(),
