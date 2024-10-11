@@ -49,8 +49,8 @@ class NotificationHelper @Inject constructor(
         val notificationManager =
             context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        val intent = Intent(context, MainActivity::class.java).apply {
-            `package` = context.packageName
+        val intent = Intent().apply {
+            setClass(context, MainActivity::class.java)
             flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
         }
         val pendingIntent =
