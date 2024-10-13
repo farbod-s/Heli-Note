@@ -11,6 +11,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import technology.heli.helinote.core.domain.model.Note
 
@@ -21,6 +22,7 @@ fun NoteItem(note: Note, onClick: () -> Unit) {
             .fillMaxWidth()
             .padding(8.dp)
             .clickable(onClick = onClick)
+            .testTag("NoteItem")
     ) {
         Column(modifier = Modifier.padding(horizontal = 8.dp)) {
             Spacer(modifier = Modifier.height(16.dp))
